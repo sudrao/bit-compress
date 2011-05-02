@@ -1,0 +1,36 @@
+<h1>Company internal web address compressor</h1>
+<% if @url %>
+Done! Your new url is <span class="bold">
+<a href="<%= @url %>"><%= @url %></a>
+</span><br />
+For temporary use. May be deleted at some point to recover disk space.<br /><br />
+<% end %>
+<% if @errmsg %>
+<h3><%= @errmsg %></h3>
+<% end %>
+
+<h3>Assign a custom short URL to any long URL</h3>
+
+<form action="/customset" method="post">
+ Enter a password, short URL, and the long URL you want to compress.<br />
+ You will need to remember the password and short URL if you want to change the long URL later.<br />
+ All fields are mandatory. <br /><br />
+
+ <label>Password</label>
+ <input name="password" type="text" value="<%= @password %>"/>
+ <label>No blanks. Not your Company password. Also see below</label><br />
+ <label>Short URL - http://bit.#{DOMAIN}.com/</label>
+ <input name="customname" type="text" value="<%= @customname %>"/>
+ <label>Only alphabets, numbers, underscores, and hyphens</label><br />
+ <label>Long URL</label>
+ <input name="urlin" type="text" value="<%= @urlin %>" /></br >
+ <input type="submit" value="Assign" />
+</form>
+
+<p>
+Password:
+A password makes it possible to reassign the short URL to a different long URL without changing someone else's short URL. There is a current requirement that each password be unique across users and across URL's. So you will need a new password for each short URL that you create. If you make a typo for the password when reassigning the short URL the software assumes you are creating a new URL and will flag the short URL as a duplicate. And yes, you need a password even if you never intend to reassign the short URL.
+</p>
+<p>
+<br />
+</p>
