@@ -1,11 +1,12 @@
 #!/usr/local/bin/ruby
 def plain(inp)
   result = ""
-  inp.each do |b|
-    if ((b >= ?A) && (b <= ?Z)) || ((b >= ?a) && (b <= ?z))
-      result += b.chr
+  inp.each do |ch|
+    b = ch.chr
+    if ((b >= 'A') && (b <= 'Z')) || ((b >= 'a') && (b <= 'z'))
+      result += b
     else
-      result += ((b & 0xf) | ?a).chr
+      result += ((ch & 0xf) | 'a'.ord).chr
     end
   end
   result

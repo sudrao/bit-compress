@@ -5,7 +5,7 @@ require 'erb'
 require 'redis'
 
 get '/hi' do
-  "Hi! This is the Company web address compressor."
+  "Hi! This is the web address compressor."
 end
 
 get '/set' do
@@ -56,14 +56,14 @@ def process_set(short=false)
     end
     unless r[key]
       r.set(key, params['urlin'])
-      @url = "http://bit.#{DOMAIN}.com/#{key}"
+      @url = "http://short.cloudfoundry.com/#{key}"
       if short
         '<a href="' + @url + '">' + "#{@url}</a>"
       else
         erb :index
       end
     else
-      "<h3>Error: Report to admin@#{DOMAIN}.com</h3>"
+      "<h3>Error: Report to admin@cloudfoundry.com</h3>"
     end
   else
     redirect '/'
@@ -103,7 +103,7 @@ def process_customset(short = false)
         else
           r.set(@password, @customname)
           r.set(@customname, @urlin)
-          @url = "http://bit.#{DOMAIN}.com/#{@customname}"
+          @url = "http://short.cloudfoundry.com/#{@customname}"
           @password=nil
           @urlin=nil
           @customname=nil
