@@ -1,4 +1,15 @@
 #!/usr/local/bin/ruby
+
+module MyOrd
+  def ord 
+    self[0] # for Ruby < 1.9
+  end
+end
+
+class String
+  include MyOrd unless method_defined? :ord
+end
+  
 def plain(inp)
   result = ""
   inp.each do |ch|
