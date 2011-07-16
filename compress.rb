@@ -3,6 +3,19 @@ require 'sinatra'
 require 'sixchars'
 require 'erb'
 require 'redis'
+require 'json'
+
+configure do
+    if vcap = ENV['VCAP_SERVICES']
+      services = JSON.parse(vcap)
+      redis_key = services.keys.select { |svc| svc =~ /redis/i }.first
+      redis = services[redis_key].first['credentials']
+      redis_conf = {:host => redis['hostname'], :port => redis['port'], :password => redis['password']}
+      @@redis = Redis.new redis_conf
+    else
+      @@redis = Redis.new
+    end
+end
 
 get '/hi' do
   "Hi! This is the web address compressor."
@@ -27,7 +40,7 @@ end
 get '/:key' do
   redir = nil;
   if (params[:key])
-    r = Redis.new;
+    r = @@redis
     redir = r[params[:key]]
     unless (redir.nil?)
       redirect redir;
@@ -48,7 +61,7 @@ end
 
 def process_set(short=false)
   if params['urlin'] && params['urlin'].include?('http')
-    r = Redis.new
+    r = @@redis
     key = rand_url;
     10.times do |index|
       break unless r[key]
@@ -91,7 +104,7 @@ def process_customset(short = false)
       @errmsg = "Password and short URL cannot be the same. Please try another password."
       erb :custom
     else
-      r = Redis.new
+      r = @@redis
       existing_key = r[@password]
       if existing_key and (@customname != existing_key)
         @errmsg = "Sorry password does not match or is duplicate. Please try another password."
